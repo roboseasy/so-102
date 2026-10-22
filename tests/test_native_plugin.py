@@ -1,6 +1,8 @@
 """공식 LeRobot CLI 자동 발견·보정·실행 루프의 통합 검증."""
 
-from contextlib import redirect_stdout
+from collections.abc import Iterator
+from contextlib import contextmanager, redirect_stdout
+from dataclasses import asdict
 import importlib.util
 import io
 import json
@@ -23,8 +25,11 @@ class NativeBus:
 	def __init__(self, config: object, calibration: dict) -> None:
 		from lerobot.motors import Motor, MotorNormMode
 
-		self.motors = {name: Motor(config.motor_ids[name], 'sts3215',
-			MotorNormMode.DEGREES) for name in NAMES}
+		body_mode = (MotorNormMode.DEGREES if config.use_degrees
+			else MotorNormMode.RANGE_M100_100)
+		self.motors = {name: Motor(index, 'sts3215',
+			MotorNormMode.RANGE_0_100 if name == 'gripper' else body_mode)
+			for index, name in enumerate(NAMES, 1)}
 		self.calibration = calibration
 		self.is_connected = False
 		self.calls = []
@@ -60,6 +65,15 @@ class NativeBus:
 		"""토크 활성화 기록."""
 		self.calls.append(('enable',))
 
+	@contextmanager
+	def torque_disabled(self) -> Iterator[None]:
+		"""공식 모터 설정의 토크 컨텍스트를 제공한다."""
+		self.disable_torque()
+		try:
+			yield
+		finally:
+			self.enable_torque()
+
 	def write(self, *args: object) -> None:
 		"""레지스터 쓰기 기록."""
 		self.calls.append(('write', args))
@@ -82,8 +96,8 @@ class NativeBus:
 		return dict.fromkeys(NAMES, 0)
 
 	def record_ranges_of_motion(self, names: list[str]) -> tuple[dict, dict]:
-		"""추가 축과 손목 회전도 측정하는지 확인한다."""
-		assert set(names) == set(NAMES)
+		"""공식 보정처럼 손목 회전을 제외한 6축의 범위를 측정한다."""
+		assert set(names) == set(NAMES) - {'wrist_roll'}
 		return dict.fromkeys(names, 1000), dict.fromkeys(names, 3000)
 
 	def write_calibration(self, calibration: dict) -> None:
@@ -149,7 +163,7 @@ print('AUTO_DISCOVERY_OK')
 			self.assertIn('so102_follower', result.stdout)
 
 	def test_user_command_native_loop(self) -> None:
-		"""사용자 명령을 실제 LeRobot main·파서·processor·루프로 실행한다."""
+		"""공식 CLI의 기본 추종과 명시한 상대 목표 제한을 검증한다."""
 		from lerobot.scripts import lerobot_teleoperate
 
 		follower = self.calibration('follower')
@@ -163,17 +177,47 @@ print('AUTO_DISCOVERY_OK')
 			'--teleop.id=so102_leader', '--display_data=false',
 			f'--robot.calibration_dir={follower}',
 			f'--teleop.calibration_dir={leader}', '--teleop_time_s=0.02']
-		with patch('sys.argv', args), redirect_stdout(io.StringIO()):
-			with patch('roboseasy_so102.lerobot_devices.make_native_bus',
-				self.bus):
-				lerobot_teleoperate.main()
-		self.assertEqual(len(self.buses), 2)
-		follower_bus = next(b for b in self.buses if 'follower' in b.port)
-		goals = [c[1] for c in follower_bus.calls if c[0] == 'goal' and c[2]]
-		self.assertTrue(goals)
-		self.assertEqual(set(goals[0]), set(NAMES))
-		self.assertEqual(goals[0]['wrist_yaw'], 1.0)
-		self.assertTrue(all(not bus.is_connected for bus in self.buses))
+		for leader_pan, follower_pan, expected_pan, options in (
+			(0.0, 0.0, 0.0, []),
+			(-7.69, 7.82, -7.69, []),
+			(7.82, -7.69, 7.82, []),
+			(-7.69, 7.82, 5.82, ['--robot.max_relative_target=2.0']),
+		):
+			with self.subTest(leader_pan=leader_pan,
+				follower_pan=follower_pan, options=options):
+				self.buses.clear()
+
+				def make_startup_bus(config: object,
+					calibration: dict) -> NativeBus:
+					"""사용자 로그의 초기 관절 위치를 재현한다."""
+					bus = self.bus(config, calibration)
+					bus._values['shoulder_pan'] = (leader_pan
+						if 'leader' in config.port else follower_pan)
+					return bus
+
+				with patch('sys.argv', args + options), redirect_stdout(
+					io.StringIO()):
+					with patch('roboseasy_so102.lerobot_devices.make_native_bus',
+						make_startup_bus):
+						lerobot_teleoperate.main()
+				self.assertEqual(len(self.buses), 2)
+				follower_bus = next(b for b in self.buses
+					if 'follower' in b.port)
+				goals = [c[1] for c in follower_bus.calls
+					if c[0] == 'goal' and c[2]]
+				self.assertTrue(goals)
+				self.assertEqual(set(goals[0]), set(NAMES))
+				self.assertAlmostEqual(goals[0]['shoulder_pan'], expected_pan)
+				self.assertEqual(goals[0]['wrist_yaw'], 1.0)
+				previous_pan = follower_pan
+				for goal in goals:
+					if options:
+						self.assertLessEqual(
+							abs(goal['shoulder_pan'] - previous_pan), 2.0 + 1e-9)
+					else:
+						self.assertEqual(goal['shoulder_pan'], leader_pan)
+					previous_pan = goal['shoulder_pan']
+				self.assertTrue(all(not bus.is_connected for bus in self.buses))
 
 	def test_native_calibrate_both_roles(self) -> None:
 		"""공식 보정 명령으로 로봇·리더 모두 표준 JSON을 저장한다."""
@@ -197,58 +241,55 @@ print('AUTO_DISCOVERY_OK')
 				data = json.loads(saved.read_text())
 				self.assertEqual(set(data), set(NAMES))
 				self.assertEqual(data['wrist_yaw']['id'], 5)
-				self.assertEqual(data['wrist_roll']['range_min'], 1000)
+				self.assertEqual(data['wrist_yaw']['range_min'], 1000)
+				self.assertEqual(data['wrist_yaw']['range_max'], 3000)
+				self.assertEqual(data['wrist_roll']['range_min'], 0)
+				self.assertEqual(data['wrist_roll']['range_max'], 4095)
 				self.assertFalse(self.buses[-1].is_connected)
 
-	def test_calibration_connect_does_not_enable_torque(self) -> None:
-		"""공식 calibrate의 연결 단계에서 보정이나 구동을 시작하지 않는다."""
+	def test_official_config_defaults(self) -> None:
+		"""공식 설정의 필드와 기본값을 추가 옵션 없이 그대로 사용한다."""
+		from lerobot.robots.so_follower.config_so_follower import (
+			SOFollowerRobotConfig,
+		)
+		from lerobot.teleoperators.so_leader.config_so_leader import (
+			SOLeaderTeleopConfig,
+		)
+		from roboseasy_so102 import SO102FollowerConfig, SO102LeaderConfig
+
+		for config_class, official_class in (
+			(SO102FollowerConfig, SOFollowerRobotConfig),
+			(SO102LeaderConfig, SOLeaderTeleopConfig),
+		):
+			with self.subTest(config_class=config_class):
+				self.assertEqual(asdict(config_class(port='/dev/missing')),
+					asdict(official_class(port='/dev/missing')))
+
+	def test_relative_limits_and_units(self) -> None:
+		"""공식 구현으로 7축 모두에 지정한 상대 제한과 정규화를 적용한다."""
 		from roboseasy_so102 import SO102Follower, SO102FollowerConfig
 
-		config = SO102FollowerConfig(port='/dev/follower',
-			calibration_dir=self.root)
-		with patch('roboseasy_so102.lerobot_devices.make_native_bus',
-				self.bus):
-			robot = SO102Follower(config)
-			try:
-				robot.connect(calibrate=False)
-				self.assertEqual(self.buses[-1].calls, [])
-			finally:
-				robot.disconnect()
-
-	def test_native_action_guards(self) -> None:
-		"""범위·초기 자세·비정상 값 오류가 실제 쓰기로 이어지지 않는다."""
-		from roboseasy_so102 import SO102Follower, SO102FollowerConfig
-
-		directory = self.calibration('guard')
-		config = SO102FollowerConfig(port='/dev/follower', id='so102_guard',
-			calibration_dir=directory)
-		with patch('roboseasy_so102.lerobot_devices.make_native_bus',
-				self.bus):
+		limits = {name: index / 10 for index, name in enumerate(NAMES, 1)}
+		config = SO102FollowerConfig(port='/dev/follower', id='so102_follower',
+			use_degrees=False, calibration_dir=self.calibration('follower'),
+			max_relative_target=limits)
+		with patch('roboseasy_so102.lerobot_devices.make_native_bus', self.bus):
 			robot = SO102Follower(config)
 			try:
 				robot.connect()
 				bus = self.buses[-1]
-				before = len(bus.calls)
-				for value in (float('nan'), 15.0, 200.0):
-					with self.subTest(value=value):
-						action = {f'{name}.pos': val
-							for name, val in bus._values.items()}
-						action['wrist_yaw.pos'] = value
-						with self.assertRaises(ValueError):
-							robot.send_action(action)
-						self.assertEqual(len(bus.calls), before)
+				self.assertEqual(bus.motors['wrist_yaw'].norm_mode.value,
+					'range_m100_100')
+				self.assertEqual(bus.motors['gripper'].norm_mode.value,
+					'range_0_100')
+				present = bus._values.copy()
+				action = {f'{name}.pos': value + 5.0
+					for name, value in present.items()}
+				result = robot.send_action(action)
+				self.assertEqual(set(result), {f'{name}.pos' for name in NAMES})
+				for name in NAMES:
+					self.assertAlmostEqual(result[f'{name}.pos'],
+						present[name] + limits[name])
+					self.assertEqual(bus.calls[-1][1][name], result[f'{name}.pos'])
 			finally:
 				robot.disconnect()
-
-	def test_relative_limits_and_units(self) -> None:
-		"""LeRobot의 관절별 제한과 정규화 옵션을 그대로 전달한다."""
-		from roboseasy_so102 import SO102Follower, SO102FollowerConfig
-
-		config = SO102FollowerConfig(port='/dev/missing', use_degrees=False,
-			calibration_dir=self.root,
-			max_relative_target={name: 1.0 for name in NAMES})
-		robot = SO102Follower(config)
-		self.assertEqual(robot.bus.motors['wrist_yaw'].norm_mode.value,
-			'range_m100_100')
-		self.assertEqual(robot.bus.motors['gripper'].norm_mode.value,
-			'range_0_100')

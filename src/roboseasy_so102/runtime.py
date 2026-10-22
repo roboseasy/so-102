@@ -26,15 +26,6 @@ class Device(Protocol):
 	def close(self, disable_torque: bool = True) -> None: ...
 
 
-def check_start(target: dict[str, float], present: dict[str, float],
-	settings: Settings) -> None:
-	"""초기 자세 차이가 큰 경우 활성화 전에 거부한다."""
-	for name in JOINT_NAMES:
-		if abs(target[name] - present[name]) > settings.startup_tolerance:
-			raise ValueError(f'{name}: 초기 자세 차이가 큽니다. '
-				'두 암의 자세를 맞춘 후 다시 시작하세요.')
-
-
 def teleoperate(settings: Settings, leader: Device, follower: Device,
 	duration: float = 0.0) -> int:
 	"""입력을 검증한 후 팔로워에 전달하며 모든 종료 경로를 정리한다.
@@ -59,13 +50,11 @@ def teleoperate(settings: Settings, leader: Device, follower: Device,
 		follower.load_calibration()
 		target = map_action(leader.read(), settings)
 		present = positions(follower.read())
-		check_start(target, present, settings)
 		limit_action(target, present, follower.bounds, settings.max_step)
 		leader.activate()
 		# 리더 토크 해제 이후 자세가 바뀔 수 있으므로 다시 검사한다.
 		target = map_action(leader.read(), settings)
 		present = positions(follower.read())
-		check_start(target, present, settings)
 		limit_action(target, present, follower.bounds, settings.max_step)
 		follower.activate()
 		started = previous = time.monotonic()

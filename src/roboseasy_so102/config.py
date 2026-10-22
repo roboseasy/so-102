@@ -57,7 +57,6 @@ class Settings:
 	calibration_dir: Path
 	fps: float = 30.0
 	max_step: float = 2.0
-	startup_tolerance: float = 10.0
 	max_cycle_seconds: float = 0.25
 	disable_torque_on_exit: bool = True
 	scale: dict[str, float] = field(default_factory=lambda: {
@@ -74,8 +73,7 @@ class Settings:
 		if (Path(self.leader.port).resolve()
 			== Path(self.follower.port).resolve()):
 			raise ValueError('리더와 팔로워는 서로 다른 포트를 사용해야 합니다.')
-		for name in ('fps', 'max_step', 'startup_tolerance',
-			'max_cycle_seconds'):
+		for name in ('fps', 'max_step', 'max_cycle_seconds'):
 			positive(getattr(self, name), name)
 		if self.max_cycle_seconds < 1 / self.fps:
 			raise ValueError('max_cycle_seconds는 한 제어 주기 이상이어야 합니다.')
