@@ -1,0 +1,3 @@
+# REPLACE_*_SERIAL을 각 보드의 실제 USB serial로 바꾼 후 설치한다.
+SUBSYSTEM=="tty", ATTRS{serial}=="REPLACE_LEADER_SERIAL", SYMLINK+="so102_leader", GROUP="dialout", MODE="0660"
+SUBSYSTEM=="tty", ATTRS{serial}=="REPLACE_FOLLOWER_SERIAL", SYMLINK+="so102_follower", GROUP="dialout", MODE="0660"

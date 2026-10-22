@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="220" viewBox="0 0 1000 220">
+<rect width="1000" height="220" rx="20" fill="#f2f5f8"/>
+<g font-family="sans-serif" text-anchor="middle">
+<rect x="35" y="45" width="240" height="130" rx="15" fill="#e0eaf5"/>
+<text x="155" y="90" fill="#18283a" font-size="25" font-weight="bold">SO-102 Leader</text>
+<text x="155" y="130" fill="#405674" font-size="18">/dev/so102_leader</text>
+<rect x="390" y="45" width="220" height="130" rx="15" fill="#18283a"/>
+<text x="500" y="100" fill="white" font-size="28" font-weight="bold">PC</text>
+<text x="500" y="140" fill="#c4d6eb" font-size="18">LeRobot v0.6.0</text>
+<rect x="725" y="45" width="240" height="130" rx="15" fill="#e0eaf5"/>
+<text x="845" y="90" fill="#18283a" font-size="25" font-weight="bold">SO-102 Follower</text>
+<text x="845" y="130" fill="#405674" font-size="18">/dev/so102_follower</text>
+<path d="M275 110H390 M610 110H725" stroke="#567ca9" stroke-width="5"/>
+<text x="332" y="95" fill="#405674" font-size="17">USB</text>
+<text x="668" y="95" fill="#405674" font-size="17">USB</text>
+</g></svg>

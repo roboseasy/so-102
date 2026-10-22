@@ -1,0 +1,9 @@
+name: lerobot060
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - pip
+  - ffmpeg
+# 환경 활성화 후 저장소 루트에서 python -m pip install -e .
+# 기존 lerobot060 환경에는 이 파일로 재생성·일괄 업데이트하지 않는다.

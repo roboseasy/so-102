@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lerobot_robot_so102"
+version = "0.1.0"
+description = "Roboseasy SO-102 seven-joint plugin for LeRobot"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = ["lerobot[core_scripts,feetech]==0.6.0"]
+
+[project.optional-dependencies]
+robot = []  # 기존 설치 명령의 호환용 별칭
+render = ["matplotlib>=3.6", "numpy>=1.24"]
+
+[project.scripts]
+so102 = "roboseasy_so102.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.data-files]
+"share/roboseasy_so102/urdf" = ["soarm101_7dof_description/urdf/soarm101_7dof_relative.urdf"]
+"share/roboseasy_so102/meshes" = ["soarm101_7dof_description/meshes/*.stl"]

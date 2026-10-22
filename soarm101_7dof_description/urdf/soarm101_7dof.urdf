@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 7축 SO-ARM101 (관절 6 + 그리퍼 1). "0. 7DoF_assembly.SLDASM" 에서 자동 생성 (scripts\build_urdf.py). q=0 = SolidWorks 어셈블리 자세 -->
+<robot name="soarm101_7dof">
+
+  <link name="base_link">
+    <inertial>
+      <origin xyz="-0.0235534758 -2.8490969e-05 0.0341959344" rpy="0 0 0"/>
+      <mass value="0.139292"/>
+      <inertia ixx="1.145890e-04" ixy="-3.297368e-07" ixz="1.208165e-06" iyy="1.228992e-04" iyz="4.829062e-08" izz="1.192639e-04"/>
+    </inertial>
+    <!-- Base_SO101.step-1 -->
+    <visual>
+      <origin xyz="-0.0451999987 6.25483585e-09 0" rpy="1.57079633 0 1.57079633"/>
+      <geometry><mesh filename="package://soarm101_7dof_description/meshes/base_so101.stl"/></geometry>
+      <material name="printed"/>
+    </visual>
+    <collision>
+      <origin xyz="-0.0451999987 6.25483585e-09 0" rpy="1.57079633 0 1.57079633"/>
+      <geometry><mesh filename="package://soarm101_7dof_description/meshes/base_so101.stl"/></geometry>
+    </collision>
+    <!-- Base_motor_holder_SO101.step-1 -->
+    <visual>
+      <origin xyz="-0.0451999989 6.25482721e-09 -0.0001" rpy="1.57079633 0 1.57079633"/>
+      <geometry><mesh filename="package://soarm101_7dof_description/meshes/base_motor_holder_so101.stl"/></geometry>
+      <material name="printed"/>
+    </visual>
+    <collision>
+      <origin xyz="-0.0451999989 6.25482721e-09 -0.0001" rpy="1.57079633 0 1.57079633"/>
+      <geometry><mesh filename="package://soarm101_7dof_description/meshes/base_motor_holder_so101.stl"/></geometry>
+    </collision>
+    <!-- 0. STS3215-1 -->
+    <visual>
+      <origin xyz="-0.012499999 6.25159851e-09 0.0461" rpy="0 0 4.42609292e-10"/>
+      <geometry><mesh filename="package://soarm101_7dof_description/meshes/0_sts3215.stl"/></geometry>
+      <material name="motor"/>
+    </visual>
+    <collision>
+      <origin xyz="-0.012499999 6.25159851e-09 0.0461" rpy="0 0 4.42609292e-10"/>
+      <geometry><mesh filename="package://soarm101_7dof_description/meshes/0_sts3215.stl"/></geometry>
+    </collision>
+  </link>
+
+  <link name="shoulder_link">
+    <inertial>
+      <origin xyz="0.0309634877 1.7590935e-05 0.0211648492" rpy="0 0 0"/>
+      <mass value="0.102259"/>
+      <inertia ixx="9.761370e-05" ixy="-3.573479e-08" ixz="-1.817882e-06" iyy="9.697388e-05" iyz="-1.502109e-07" izz="2.362216e-05"/>
+    </inertial>
+    <!-- Rotation_Pitch_SO101.step-1 -->
+    <visual>
+      <origin xyz="-0.011999999 6.25184816e-09 -0.0464" rpy="1.57079633 0 -3.14159265"/>
+      <geometry><mesh filename="package://soarm101_7dof_description/meshes/rotation_pitch_so101.stl"/></geometry>
+      <material name="printed"/>
+    </visual>
+    <collision>
+      <origin xyz="-0.011999999 6.25184816e-09 -0.0464" rpy="1.57079633 0 -3.14159265"/>
+      <geometry><mesh filename="package://soarm101_7dof_description/meshes/rotation_pitch_so101.stl"/></geometry>
+    </collision>
+    <!-- Motor_holder_SO101_Base-1 -->
+    <visual>
+      <origin xyz="0.067800001 6.28716907e-09 -0.0158499073" rpy="1.57079633 1.57079633 0"/>
+      <geometry><mesh filename="package://soarm101_7dof_description/meshes/motor_holder_so101_base.stl"/></geometry>
+      <material name="printed"/>
+    </visual>
+    <collision>
+      <origin xyz="0.067800001 6.28716907e-09 -0.0158499073" rpy="1.57079633 1.57079633 0"/>
+      <geometry><mesh filename="package://soarm101_7dof_description/meshes/motor_holder_so101_base.stl"/></geometry>
+    </collision>
+    <!-- 0. STS3215-2 -->
+    <visual>
+      <origin xyz="0.030600001 0.000400006271 0.0417" rpy="1.57079633 -1.57079633 0"/>
+      <geometry><mesh filename="package://soarm101_7dof_description/meshes/0_sts3215.stl"/></geometry>
+      <material name="motor"/>
+    </visual>
+    <collision>
+      <origin xyz="0.030600001 0.000400006271 0.0417" rpy="1.57079633 -1.57079633 0"/>
+      <geometry><mesh filename="package://soarm101_7dof_description/meshes/0_sts3215.stl"/></geometry>
+    </collision>
+  </link>
+
+  <link name="upper_arm_link">
+    <inertial>
+      <origin xyz="-0.0839047375 -0.0159114209 0.00659733585" rpy="0 0 0"/>
+      <mass value="0.122563"/>
+      <inertia ixx="5.106971e-05" ixy="-1.315039e-07" ixz="2.342329e-05" iyy="1.841269e-04" iyz="-5.543209e-08" izz="1.957169e-04"/>
+    </inertial>
+    <!-- Upper_arm_SO101-2 -->
+    <visual>
+      <origin xyz="-0.0650849954 -0.0161 -0.011999999" rpy="1.57079633 0 4.42613814e-10"/>
+      <geometry><mesh filename="package://soarm101_7dof_description/meshes/upper_arm_so101.stl"/></geometry>
+      <material name="printed"/>
+    </visual>
+    <collision>
+      <origin xyz="-0.0650849954 -0.0161 -0.011999999" rpy="1.57079633 0 4.42613814e-10"/>
+      <geometry><mesh filename="package://soarm101_7dof_description/meshes/upper_arm_so101.stl"/></geometry>
+    </collision>
+    <!-- 0. STS3215-3 -->
+    <visual>
+      <origin xyz="-0.112569984 -0.01555 0.015500001" rpy="1.57079633 -1.57079633 0"/>
+      <geometry><mesh filename="package://soarm101_7dof_description/meshes/0_sts3215.stl"/></geometry>
+      <material name="motor"/>
+    </visual>
+    <collision>
+      <origin xyz="-0.112569984 -0.01555 0.015500001" rpy="1.57079633 -1.57079633 0"/>
+      <geometry><mesh filename="package://soarm101_7dof_description/meshes/0_sts3215.stl"/></geometry>
+    </collision>
+  </link>
+
+  <link name="lower_arm_link">
+    <inertial>
+      <origin xyz="0.090828057 -0.0160616737 0.00261144559" rpy="0 0 0"/>
+      <mass value="0.116177"/>
+      <inertia ixx="3.409122e-05" ixy="-1.594975e-06" ixz="-9.088457e-06" iyy="1.841579e-04" iyz="-7.076128e-08" izz="2.034303e-04"/>
+    </inertial>
+    <!-- 6. Under_arm_ver3-1 -->
+    <visual>
+      <origin xyz="0.0648499021 -0.0161 -0.0319895261" rpy="-1.57079633 0 -3.14159265"/>
+      <geometry><mesh filename="package://soarm101_7dof_description/meshes/6_under_arm_ver3.stl"/></geometry>
+      <material name="printed"/>
+    </visual>
+    <collision>
+      <origin xyz="0.0648499021 -0.0161 -0.0319895261" rpy="-1.57079633 0 -3.14159265"/>
+      <geometry><mesh filename="package://soarm101_7dof_description/meshes/6_under_arm_ver3.stl"/></geometry>
+    </collision>
+    <!-- Motor_holder_SO101_Wrist-1 -->
+    <visual>
+      <origin xyz="0.064849903 -0.0161 -0.0319895289" rpy="-1.57079633 0 -3.14159265"/>
+      <geometry><mesh filename="package://soarm101_7dof_description/meshes/motor_holder_so101_wrist.stl"/></geometry>
+      <material name="printed"/>
+    </visual>
+    <collision>
+      <origin xyz="0.064849903 -0.0161 -0.0319895289" rpy="-1.57079633 0 -3.14159265"/>
+      <geometry><mesh filename="package://soarm101_7dof_description/meshes/motor_holder_so101_wrist.stl"/></geometry>
+    </collision>
+    <!-- 0. STS3215-4 -->
+    <visual>
+      <origin xyz="0.12239981 -0.0156000005 0.00521047114" rpy="1.57079633 0 4.42614018e-10"/>
+      <geometry><mesh filename="package://soarm101_7dof_description/meshes/0_sts3215.stl"/></geometry>
+      <material name="motor"/>
+    </visual>
+    <collision>
+      <origin xyz="0.12239981 -0.0156000005 0.00521047114" rpy="1.57079633 0 4.42614018e-10"/>
+      <geometry><mesh filename="package://soarm101_7dof_description/meshes/0_sts3215.stl"/></geometry>
+    </collision>
+  </link>
+
+  <link name="wrist_flex_link">
+    <inertial>
+      <origin xyz="0.0313315361 -0.0163359856 0.000197151195" rpy="0 0 0"/>
+      <mass value="0.075818"/>
+      <inertia ixx="1.783862e-05" ixy="9.240620e-07" ixz="3.772686e-08" iyy="2.859762e-05" iyz="-2.814949e-08" izz="3.110664e-05"/>
+    </inertial>
+    <!-- 7DoF_1_ver8_Dumy-1 -->
+    <visual>
+      <origin xyz="-0.404324493 -0.116360001 -0.0010754171" rpy="4.42614081e-10 -1.57079633 0"/>
+      <geometry><mesh filename="package://soarm101_7dof_description/meshes/7dof_1_ver8_dumy.stl"/></geometry>
+      <material name="printed"/>
+    </visual>
+    <collision>
+      <origin xyz="-0.404324493 -0.116360001 -0.0010754171" rpy="4.42614081e-10 -1.57079633 0"/>
+      <geometry><mesh filename="package://soarm101_7dof_description/meshes/7dof_1_ver8_dumy.stl"/></geometry>
+    </collision>
+    <!-- 0. STS3215-5 -->
+    <visual>
+      <origin xyz="0.0379737596 -0.0166 6.25715302e-09" rpy="0 0 4.42595894e-10"/>
+      <geometry><mesh filename="package://soarm101_7dof_description/meshes/0_sts3215.stl"/></geometry>
+      <material name="motor"/>
+    </visual>
+    <collision>
+      <origin xyz="0.0379737596 -0.0166 6.25715302e-09" rpy="0 0 4.42595894e-10"/>
+      <geometry><mesh filename="package://soarm101_7dof_description/meshes/0_sts3215.stl"/></geometry>
+    </collision>
+  </link>
+
+  <link name="wrist_yaw_link">
+    <inertial>
+      <origin xyz="0.0356074254 0.00673313501 -0.0179027763" rpy="0 0 0"/>
+      <mass value="0.087889"/>
+      <inertia ixx="3.395109e-05" ixy="-1.514982e-06" ixz="8.492321e-08" iyy="2.418961e-05" iyz="1.697626e-07" izz="3.995978e-05"/>
+    </inertial>
+    <!-- 7DoF_2_ver8_Dumy-1 -->
+    <visual>
+      <origin xyz="-0.404324493 -0.00107541728 0.0820600004" rpy="-1.57079633 0 1.57079633"/>
+      <geometry><mesh filename="package://soarm101_7dof_description/meshes/7dof_2_ver8_dumy.stl"/></geometry>
+      <material name="printed"/>
+    </visual>
+    <collision>
+      <origin xyz="-0.404324493 -0.00107541728 0.0820600004" rpy="-1.57079633 0 1.57079633"/>
+      <geometry><mesh filename="package://soarm101_7dof_description/meshes/7dof_2_ver8_dumy.stl"/></geometry>
+    </collision>
+    <!-- 0. STS3215-6 -->
+    <visual>
+      <origin xyz="0.0374696629 0.0130000063 -0.0184" rpy="-1.57079633 0 -1.57079633"/>
+      <geometry><mesh filename="package://soarm101_7dof_description/meshes/0_sts3215.stl"/></geometry>
+      <material name="motor"/>
+    </visual>
+    <collision>
+      <origin xyz="0.0374696629 0.0130000063 -0.0184" rpy="-1.57079633 0 -1.57079633"/>
+      <geometry><mesh filename="package://soarm101_7dof_description/meshes/0_sts3215.stl"/></geometry>
+    </collision>
+  </link>
+
+  <link name="gripper_link">
+    <inertial>
+      <origin xyz="0.0253788613 0.000626571027 0.000184402517" rpy="0 0 0"/>
+      <mass value="0.087600"/>
+      <inertia ixx="3.555905e-05" ixy="-6.307946e-06" ixz="4.725557e-08" iyy="2.945128e-05" iyz="3.141729e-07" izz="4.590520e-05"/>
+    </inertial>
+    <!-- Wrist_Roll_Follower_SO101-1 -->
+    <visual>
+      <origin xyz="-0.000949706453 -9.6880126e-10 -0.000218220737" rpy="-1.57079633 0 -1.57079633"/>
+      <geometry><mesh filename="package://soarm101_7dof_description/meshes/wrist_roll_follower_so101.stl"/></geometry>
+      <material name="printed"/>
+    </visual>
+    <collision>
+      <origin xyz="-0.000949706453 -9.6880126e-10 -0.000218220737" rpy="-1.57079633 0 -1.57079633"/>
+      <geometry><mesh filename="package://soarm101_7dof_description/meshes/wrist_roll_follower_so101.stl"/></geometry>
+    </collision>
+    <!-- 0. STS3215-7 -->
+    <visual>
+      <origin xyz="0.0233749986 -0.00770000096 -6.25719395e-09" rpy="0 0 -1.57079633"/>
+      <geometry><mesh filename="package://soarm101_7dof_description/meshes/0_sts3215.stl"/></geometry>
+      <material name="motor"/>
+    </visual>
+    <collision>
+      <origin xyz="0.0233749986 -0.00770000096 -6.25719395e-09" rpy="0 0 -1.57079633"/>
+      <geometry><mesh filename="package://soarm101_7dof_description/meshes/0_sts3215.stl"/></geometry>
+    </collision>
+  </link>
+
+  <link name="jaw_link">
+    <inertial>
+      <origin xyz="0.0299396669 0.00154114443 -0.0192735344" rpy="0 0 0"/>
+      <mass value="0.012000"/>
+      <inertia ixx="1.889811e-06" ixy="-3.212315e-07" ixz="-1.087924e-07" iyy="6.581443e-06" iyz="-5.714769e-09" izz="5.254198e-06"/>
+    </inertial>
+    <!-- Moving_Jaw_SO101.step-1 -->
+    <visual>
+      <origin xyz="6.25713142e-09 -9.68431095e-10 -0.0189" rpy="3.14159265 0 -1.57079633"/>
+      <geometry><mesh filename="package://soarm101_7dof_description/meshes/moving_jaw_so101.stl"/></geometry>
+      <material name="printed"/>
+    </visual>
+    <collision>
+      <origin xyz="6.25713142e-09 -9.68431095e-10 -0.0189" rpy="3.14159265 0 -1.57079633"/>
+      <geometry><mesh filename="package://soarm101_7dof_description/meshes/moving_jaw_so101.stl"/></geometry>
+    </collision>
+  </link>
+
+  <joint name="shoulder_pan" type="revolute">
+    <parent link="base_link"/>
+    <child link="shoulder_link"/>
+    <origin xyz="0 0 0.0648" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="-3.001966" upper="3.036873" effort="2.94" velocity="4.71"/>
+  </joint>
+
+  <joint name="shoulder_lift" type="revolute">
+    <parent link="shoulder_link"/>
+    <child link="upper_arm_link"/>
+    <origin xyz="0.0306000072 0.0160000063 0.054199999" rpy="0 0 0"/>
+    <axis xyz="0 -1 0"/>
+    <limit lower="-1.396263" upper="0.383972" effort="2.94" velocity="4.71"/>
+  </joint>
+
+  <joint name="elbow_flex" type="revolute">
+    <parent link="upper_arm_link"/>
+    <child link="lower_arm_link"/>
+    <origin xyz="-0.112569978 4.99999502e-05 0.028" rpy="0 0 0"/>
+    <axis xyz="0 -1 0"/>
+    <limit lower="-0.034907" upper="3.141593" effort="2.94" velocity="4.71"/>
+  </joint>
+
+  <joint name="wrist_flex" type="revolute">
+    <parent link="lower_arm_link"/>
+    <child link="wrist_flex_link"/>
+    <origin xyz="0.134899809 -4.52891072e-10 0.00521046488" rpy="0 0 0"/>
+    <axis xyz="0 -1 0"/>
+    <limit lower="-1.151917" upper="1.431170" effort="2.94" velocity="4.71"/>
+  </joint>
+
+  <joint name="wrist_yaw" type="revolute">
+    <parent link="wrist_flex_link"/>
+    <child link="wrist_yaw_link"/>
+    <origin xyz="0.0504737587 -0.0166000062 0.0187000063" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="-1.466077" upper="1.431170" effort="2.94" velocity="4.71"/>
+  </joint>
+
+  <joint name="wrist_roll" type="revolute">
+    <parent link="wrist_yaw_link"/>
+    <child link="gripper_link"/>
+    <origin xyz="0.0561696629 0.00050000725 -0.0183999937" rpy="0 0 0"/>
+    <axis xyz="1 0 0"/>
+    <limit lower="-3.141593" upper="3.141593" effort="2.94" velocity="4.71"/>
+  </joint>
+
+  <joint name="gripper" type="revolute">
+    <parent link="gripper_link"/>
+    <child link="jaw_link"/>
+    <origin xyz="0.0233749924 -0.0202 0.0186999937" rpy="0 0 0"/>
+    <axis xyz="0 0 -1"/>
+    <limit lower="-0.139626" upper="0.628319" effort="2.94" velocity="4.71"/>
+  </joint>
+
+</robot>
