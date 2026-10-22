@@ -11,11 +11,18 @@ LeRobot v0.6.0이 설치된 `lerobot060` 환경에 SO-102 플러그인을 추가
 
 ```bash
 conda activate lerobot060
-cd ~/workspace/so-102
+```
+
+```bash
+cd ~
+git clone https://github.com/roboseasy/so-102.git
+cd so-102
+
 python -m pip install -e .
 ```
 
-위 경로는 제공받은 SO-102 소스 폴더의 위치입니다.
+위 명령어를 lerobot 라이브러리가 설치된 가상환경에 추가로 설치만 하면 바로 사용할 수 있습니다.
+
 
 ## 2. 연결 및 캘리브레이션
 
@@ -36,6 +43,25 @@ lerobot-calibrate \
   --robot.id=so102_follower
 ```
 
+포트를 고정하지 않은 경우 `/dev/ttyACM*`의 실제 장치 경로를 지정합니다.
+아래 예시의 `ttyACM0`과 `ttyACM1`은 연결된 리더·팔로워의 포트에 맞게 변경하세요.
+
+```bash
+lerobot-calibrate \
+  --teleop.type=so102_leader \
+  --teleop.port=/dev/ttyACM0 \
+  --teleop.id=so102_leader
+
+lerobot-calibrate \
+  --robot.type=so102_follower \
+  --robot.port=/dev/ttyACM1 \
+  --robot.id=so102_follower
+```
+
+![SO-102 리더 캘리브레이션 실행 및 보정 저장 예시](docs/images/so102_calibration.png)
+
+![SO-102 팔로워 캘리브레이션 실행 및 보정 저장 예시](docs/images/so102_follower_calibration.png)
+
 ## 3. 텔레오퍼레이션 — 카메라 없이
 
 두 암의 자세를 맞춘 뒤 실행합니다. `Ctrl+C`로 종료합니다.
@@ -47,6 +73,19 @@ lerobot-teleoperate \
   --robot.id=so102_follower \
   --teleop.type=so102_leader \
   --teleop.port=/dev/so102_leader \
+  --teleop.id=so102_leader \
+  --display_data=false
+```
+
+포트를 고정하지 않은 경우 아래 예시의 `ttyACM0`과 `ttyACM1`을 실제 리더·팔로워 포트에 맞게 변경하세요.
+
+```bash
+lerobot-teleoperate \
+  --robot.type=so102_follower \
+  --robot.port=/dev/ttyACM1 \
+  --robot.id=so102_follower \
+  --teleop.type=so102_leader \
+  --teleop.port=/dev/ttyACM0 \
   --teleop.id=so102_leader \
   --display_data=false
 ```
