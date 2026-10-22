@@ -4,7 +4,6 @@
   "calibration_dir": "../calibration",
   "fps": 30,
   "max_step": 2,
-  "startup_tolerance": 10,
   "max_cycle_seconds": 0.25,
   "disable_torque_on_exit": true
 }
