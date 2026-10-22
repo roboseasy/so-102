@@ -1,0 +1,49 @@
+# Internal planning and local agent instructions
+/구현계획서.md
+/기획서.md
+/목표.md
+/정보.md
+AGENTS.md
+/docs/5. validation.md
+/docs/6. status.md
+
+# Build and distribution artifacts
+build/
+dist/
+install/
+log/
+*.egg-info/
+.eggs/
+
+# Python caches, coverage, and local environments
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+.venv/
+venv/
+
+# Personal editor and OS files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Local secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Recorded robot data
+*.bag
+*.mcap
+rosbag2_*/
