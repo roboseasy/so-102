@@ -89,13 +89,16 @@ class RuntimeTest(unittest.TestCase):
 		self.assertFalse(leader.is_connected)
 		self.assertFalse(follower.is_connected)
 
-	def test_startup_mismatch(self) -> None:
+	def test_initial_difference(self) -> None:
+		"""보조 루프도 초기 차이로 중단하지 않고 목표 변화량을 제한한다."""
 		config = settings()
 		leader = SimulatedArm(config.leader, 'leader')
 		follower = SimulatedArm(config.follower, 'follower')
 		follower._position['wrist_yaw'] = 40
-		with self.assertRaises(ValueError):
-			teleoperate(config, leader, follower, .01)
+		with patch.object(follower, 'write', wraps=follower.write) as write:
+			self.assertGreater(teleoperate(config, leader, follower, .01), 0)
+			goal = write.call_args_list[0].args[0]
+			self.assertEqual(goal['wrist_yaw'], 38.0)
 		self.assertFalse(follower.is_active)
 		self.assertFalse(leader.is_connected)
 
