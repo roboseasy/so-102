@@ -7,10 +7,10 @@
 ## 1. 설치
 
 처음 설치할 때는 [Miniconda부터 설치하기](<docs/1. usage.md>)를 따라 하세요.
-LeRobot v0.6.0이 설치된 `lerobot060` 환경에 SO-102 플러그인을 추가합니다.
+LeRobot v0.6.0이 설치된 `lerobot` 환경에 SO-102 플러그인을 추가합니다.
 
 ```bash
-conda activate lerobot060
+conda activate lerobot
 ```
 
 ```bash
@@ -19,6 +19,9 @@ git clone https://github.com/roboseasy/so-102.git
 cd so-102
 
 python -m pip install -e .
+
+# 또는 
+# pip install -e ".[so-102]"
 ```
 
 위 명령어를 lerobot 라이브러리가 설치된 가상환경에 추가로 설치만 하면 바로 사용할 수 있습니다.

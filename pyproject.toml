@@ -12,6 +12,7 @@ dependencies = ["lerobot[core_scripts,feetech]==0.6.0"]
 
 [project.optional-dependencies]
 robot = []  # 기존 설치 명령의 호환용 별칭
+so-102 = []  # pip install -e ".[so-102]" 용 별칭 (필요한 의존성은 기본 dependencies 에 이미 포함)
 render = ["matplotlib>=3.6", "numpy>=1.24"]
 
 [project.scripts]
