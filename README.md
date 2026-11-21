@@ -132,6 +132,20 @@ lerobot-record \
 - 데이터는 `~/.cache/huggingface/lerobot/${HF_USER}/so102_test`에 저장됩니다. `meta/info.json`에서 `observation.state`와 `action`의 `shape`이 `[7]`인지 확인하세요.
 - Hub에 올리려면 `hf auth login` 후 `--dataset.push_to_hub=true`로 녹화합니다.
 
+**이어서 수집하기**
+
+데이터셋 이름은 입력한 그대로 사용합니다. 공식 LeRobot v0.6.0은 녹화할 때마다 이름 뒤에 시각을 붙여 새 폴더를 만들지만, SO-102는 이전 방식을 따릅니다.
+같은 이름으로 다시 녹화하면 기존 데이터를 보호하기 위해 `FileExistsError`가 발생합니다. 이어서 수집하려면 위 명령에 다음 두 옵션을 추가합니다.
+
+```bash
+  --resume=true \
+  --dataset.root=$HOME/.cache/huggingface/lerobot/${HF_USER}/so102_test
+```
+
+- LeRobot v0.6.0은 resume할 때 `--dataset.root`를 반드시 지정해야 합니다.
+- `--dataset.num_episodes`는 이번에 추가로 녹화할 에피소드 수입니다.
+- 이전 버전에서 시각이 붙은 폴더(`so102_test_20261121_103012` 등)는 그 이름 전체를 `repo_id`와 `root`에 넣어 이어서 수집할 수 있습니다.
+
 ## 5. 모델 학습
 
 학습 기능은 LeRobot 폴더에서 추가로 설치합니다 ([상세 사용법](<docs/1. usage.md>) 1.10 참고).
@@ -185,6 +199,6 @@ lerobot-rollout \
 
 - `--duration`은 실행 시간(초)입니다. `0`이면 종료할 때까지 계속 실행합니다.
 - 처음에는 암을 지지하고 짧게 실행하세요. `Ctrl+C`로 종료합니다.
-- 추론하면서 결과를 데이터셋으로 저장하려면 `--strategy.type=episodic`과 `--dataset.*` 옵션을 사용합니다 (`lerobot-rollout --help`).
+- 추론하면서 결과를 데이터셋으로 저장하려면 `--strategy.type=episodic`과 `--dataset.*` 옵션을 사용합니다 (`lerobot-rollout --help`). 이때 데이터셋 이름은 `rollout_`으로 시작해야 합니다 (예: `${HF_USER}/rollout_so102_test`). 같은 이름을 다시 쓰는 규칙은 4단계와 같습니다.
 
 [상세 사용법](<docs/1. usage.md>) · [문제 해결](<docs/3. troubleshooting.md>) · [검증 결과](<docs/5. validation.md>) · [위키독스](https://wikidocs.net/385990)
