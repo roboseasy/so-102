@@ -151,6 +151,32 @@ print('AUTO_DISCOVERY_OK')
 		self.assertEqual(result.returncode, 0, result.stderr)
 		self.assertIn('AUTO_DISCOVERY_OK', result.stdout)
 
+	def test_dataset_name_requires_resume(self) -> None:
+		"""SO-102 녹화는 이름에 시각을 붙이지 않아 같은 이름 재생성을 막는다."""
+		script = '''
+from pathlib import Path
+from lerobot.configs.dataset import DatasetRecordConfig
+from lerobot.datasets import LeRobotDataset
+from roboseasy_so102 import SO102Follower, SO102FollowerConfig
+other = DatasetRecordConfig(repo_id='user/other')
+other.stamp_repo_id()
+assert other.repo_id != 'user/other', 'SO-102 생성 전에는 공식 동작 유지'
+SO102Follower(SO102FollowerConfig(port='/dev/missing', calibration_dir=Path('calib')))
+config = DatasetRecordConfig(repo_id='user/so102_test')
+config.stamp_repo_id()
+assert config.repo_id == 'user/so102_test', config.repo_id
+features = {'action': {'dtype': 'float32', 'shape': (7,), 'names': None}}
+LeRobotDataset.create(config.repo_id, 30, features, root='ds')
+try:
+	LeRobotDataset.create(config.repo_id, 30, features, root='ds')
+except FileExistsError:
+	print('KEEP_REPO_ID_OK')
+'''
+		result = subprocess.run([sys.executable, '-c', script],
+			cwd=self.root, capture_output=True, text=True, timeout=60)
+		self.assertEqual(result.returncode, 0, result.stderr)
+		self.assertIn('KEEP_REPO_ID_OK', result.stdout)
+
 	def test_official_help(self) -> None:
 		"""공식 teleoperate·calibrate 도움말이 SO-102 타입을 인식한다."""
 		for module, role in (('lerobot_teleoperate', 'robot'),
